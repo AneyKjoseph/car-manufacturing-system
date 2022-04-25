@@ -1,5 +1,6 @@
 package com.nissan.car.manufacturing.system.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,7 +28,7 @@ public class Plant {
 	private Long plantCode;
 
 	@NotNull
-	@Column(name = "plant_name")
+	@Column(name = "plant_name", unique = true)
 	private String plantName;
 
 	@Column(name = "active_flag")
@@ -49,9 +49,8 @@ public class Plant {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "plant_code")
-	private List<Group> groups;
+	@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
+	private List<Group> groups = new ArrayList<Group>();
 
 	public Long getPlantCode() {
 		return plantCode;
@@ -123,13 +122,10 @@ public class Plant {
 
 	public void setGroups(List<Group> groups) {
 		this.groups = groups;
-	}
 
-	@Override
-	public String toString() {
-		return "Plant [plantCode=" + plantCode + ", plantName=" + plantName + ", activeFlag=" + activeFlag + ", place="
-				+ place + ", country=" + country + ", language=" + language + ", createdDate=" + createdDate
-				+ ", lastUpdatedDate=" + lastUpdatedDate + ", groups=" + groups + "]";
+		for (Group g : groups) {
+			g.setPlant(this);
+		}
 	}
 
 }

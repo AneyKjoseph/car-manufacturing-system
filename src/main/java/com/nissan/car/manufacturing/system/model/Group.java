@@ -6,10 +6,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,11 +27,10 @@ public class Group {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "group_code")
 	private Long groupCode;
 
 	@NotNull
-	@Column(name = "group_name")
+	@Column(name = "group_name", unique = true)
 	private String groupName;
 
 	@Column(name = "active_flag")
@@ -41,9 +42,12 @@ public class Group {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "group_code")
+	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
 	private List<Zone> zones;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "plants_code")
+	private Plant plant;
 
 	public Long getGroupCode() {
 		return groupCode;
@@ -91,12 +95,18 @@ public class Group {
 
 	public void setZones(List<Zone> zones) {
 		this.zones = zones;
+
+		for (Zone z : zones) {
+			z.setGroup(this);
+		}
 	}
 
-	@Override
-	public String toString() {
-		return "Group [groupCode=" + groupCode + ", groupName=" + groupName + ", activeFlag=" + activeFlag
-				+ ", createdDate=" + createdDate + ", lastUpdatedDate=" + lastUpdatedDate + ", zones=" + zones + "]";
+	public Plant getPlant() {
+		return plant;
+	}
+
+	public void setPlant(Plant plant) {
+		this.plant = plant;
 	}
 
 }
