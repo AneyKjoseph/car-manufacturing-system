@@ -40,11 +40,11 @@ public class Zone {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "groups_code")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
+	@JoinColumn(name = "group_code")
 	private Group group;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "plant_code")
 	private Plant plant;
 

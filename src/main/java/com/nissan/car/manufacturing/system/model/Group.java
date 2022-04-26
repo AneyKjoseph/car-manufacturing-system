@@ -45,8 +45,8 @@ public class Group {
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
 	private List<Zone> zones;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "plants_code")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
+	@JoinColumn(name = "plant_code")
 	private Plant plant;
 
 	public Long getGroupCode() {
