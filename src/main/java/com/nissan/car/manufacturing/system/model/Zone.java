@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 
 /**
@@ -40,10 +41,12 @@ public class Zone {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "group_code")
 	private Group group;
 
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "plant_code")
 	private Plant plant;
