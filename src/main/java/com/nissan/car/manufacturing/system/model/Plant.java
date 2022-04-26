@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
 /**
@@ -49,6 +50,7 @@ public class Plant {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
+	@JsonManagedReference
 	@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
 	private List<Group> groups = new ArrayList<Group>();
 
