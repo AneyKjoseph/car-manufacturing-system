@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sun.istack.NotNull;
 
 /**
  * @author S Sarathkrishna
@@ -28,8 +27,7 @@ public class Plant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long plantCode;
 
-	@NotNull
-	@Column(name = "plant_name", unique = true)
+	@Column(name = "plant_name", unique = true, nullable = false)
 	private String plantName;
 
 	@Column(name = "active_flag")
@@ -50,7 +48,7 @@ public class Plant {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
-	@JsonManagedReference
+	@JsonManagedReference(value = "plant")
 	@OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
 	private List<Group> groups = new ArrayList<Group>();
 
