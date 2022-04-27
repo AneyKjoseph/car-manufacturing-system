@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.istack.NotNull;
 
 /**
  * @author S Sarathkrishna
@@ -28,8 +27,7 @@ public class Zone {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long zoneCode;
 
-	@NotNull
-	@Column(name = "zone_name", unique = true)
+	@Column(name = "zone_name", unique = true, nullable = false)
 	private String zoneName;
 
 	@Column(name = "active_flag")
@@ -41,7 +39,7 @@ public class Zone {
 	@Column(name = "last_updated_date")
 	private Date lastUpdatedDate;
 
-	@JsonBackReference
+	@JsonBackReference(value = "group")
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "group_code")
 	private Group group;
