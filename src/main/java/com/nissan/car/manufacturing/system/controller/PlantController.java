@@ -15,6 +15,9 @@ import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
 import com.nissan.car.manufacturing.system.response.Response;
 import com.nissan.car.manufacturing.system.service.PlantService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author S Sarathkrishna
  *
@@ -49,5 +52,8 @@ public class PlantController {
     public ResponseEntity<Plant> getPlantDetails(@PathVariable String id) {
         return ResponseEntity.ok(plantService.getPlantDetails(id));
     }
-
+    @GetMapping(value = "/get/all")
+    public ResponseEntity<Map<Long, Map<Long, List<Long>>>> getAll() {
+        return ResponseEntity.ok(plantService.getAll());
+    }
 }

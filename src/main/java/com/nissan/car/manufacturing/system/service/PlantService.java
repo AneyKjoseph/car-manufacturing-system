@@ -7,6 +7,9 @@ import com.nissan.car.manufacturing.system.model.Plant;
 import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
 import com.nissan.car.manufacturing.system.response.Response;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author S Sarathkrishna
  *
@@ -22,4 +25,5 @@ public interface PlantService {
 
 	Plant getPlantDetails(String id);
 
+	Map<Long, Map<Long, List<Long>>> getAll();
 }
