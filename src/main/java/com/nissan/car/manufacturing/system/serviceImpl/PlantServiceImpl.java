@@ -3,10 +3,10 @@
  */
 package com.nissan.car.manufacturing.system.serviceImpl;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.nissan.car.manufacturing.system.model.Zone;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -156,6 +156,21 @@ public class PlantServiceImpl implements PlantService {
 		} else {
 			throw new ResourceNotFoundException(PLANT_NOT_FOUND);
 		}
+	}
+
+	@Override
+	public Map<Long, Map<Long, List<Long>>> getAll() {
+		Map<Long, Map<Long, List<Long>>> plants = new HashMap<>();
+		plantRepository.findAll().stream()
+				.forEach(plant -> {
+					Map<Long, List<Long>> map = new HashMap<>();
+					plant.getGroups().stream().forEach(group ->{
+						map.put(group.getGroupCode(),group.getZones().stream().map(Zone::getZoneCode).collect(Collectors.toList()));
+						plants.put(plant.getPlantCode(),map);
+					});
+					plants.put(plant.getPlantCode(),map);
+				});
+		return  plants;
 	}
 
 }
