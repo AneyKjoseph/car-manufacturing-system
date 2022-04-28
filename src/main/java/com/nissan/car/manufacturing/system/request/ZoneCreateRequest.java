@@ -66,5 +66,14 @@ public class ZoneCreateRequest {
 	public ZoneCreateRequest() {
 		super();
 	}
+
+	public ZoneCreateRequest(String zoneName, Long plantCode, Long groupCode, boolean activeFlag) {
+		super();
+		this.zoneName = zoneName;
+		this.plantCode = plantCode;
+		this.groupCode = groupCode;
+		this.activeFlag = activeFlag;
+	}
+	
 	
 }
