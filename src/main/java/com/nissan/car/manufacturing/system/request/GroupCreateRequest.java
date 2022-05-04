@@ -14,7 +14,7 @@ public class GroupCreateRequest {
 	private Long plantCode;
 
 	@JsonProperty("active_flag")
-	private boolean activeFlag;
+	private Boolean activeFlag;
 
 	public String getGroupName() {
 		return groupName;
@@ -32,11 +32,11 @@ public class GroupCreateRequest {
 		this.plantCode = plantCode;
 	}
 
-	public boolean isActiveFlag() {
+	public Boolean isActiveFlag() {
 		return activeFlag;
 	}
 
-	public void setActiveFlag(boolean activeFlag) {
+	public void setActiveFlag(Boolean activeFlag) {
 		this.activeFlag = activeFlag;
 	}
 

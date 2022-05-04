@@ -31,8 +31,6 @@ public class GroupServiceImpl implements GroupService {
 	@Autowired
 	private PlantRepository plantRepository;
 
-	Date currentTime = new Date();
-
 	@Override
 	public CommonResponse editGroup(GroupCreateRequest groupUpdateRequest, String id) {
 		CommonResponse response = new CommonResponse();
@@ -41,7 +39,7 @@ public class GroupServiceImpl implements GroupService {
 		try {
 			if ((!groupUpdateRequest.getGroupName().isEmpty()) && (!groupUpdateRequest.getGroupName().equals(" "))) {
 				group.setGroupName(groupUpdateRequest.getGroupName());
-				group.setLastUpdatedDate(currentTime);
+				group.setLastUpdatedDate(new Date());
 				groupRepository.save(newGroup.get());
 				response.setMessage(CarSystemConstants.GROUP_EDIT);
 			} else {
@@ -54,11 +52,14 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public CommonResponse deactivateGroup(Group group) {
+
+	public CommonResponse deactivateGroup(Long id) {
+		Optional<Group> newGroup = findbyGroupCode(id);
+		Group group = newGroup.get();
 		CommonResponse response = new CommonResponse();
 		if (Objects.nonNull(group.getActiveFlag()) && (group.getActiveFlag())) {
 			group.setActiveFlag(false);
-			group.setLastUpdatedDate(currentTime);
+			group.setLastUpdatedDate(new Date());
 			groupRepository.save(group);
 			response.setMessage(CarSystemConstants.GROUP_DEACTIVATE);
 		} else {
@@ -68,13 +69,15 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public CommonResponse activateGroup(Group group) {
+	public CommonResponse activateGroup(Long id) {
+		Optional<Group> newGroup = findbyGroupCode(id);
+		Group group = newGroup.get();
 		CommonResponse response = new CommonResponse();
 		if (group.getActiveFlag()) {
 			throw new InvalidActiveStatusException(CarSystemConstants.GROUP_ACTIVE_STATUS);
 		} else {
 			group.setActiveFlag(true);
-			group.setLastUpdatedDate(currentTime);
+			group.setLastUpdatedDate(new Date());
 			groupRepository.save(group);
 			response.setMessage(CarSystemConstants.GROUP_ACTIVATE);
 		}
@@ -109,7 +112,7 @@ public class GroupServiceImpl implements GroupService {
 			addGroupDetails(groupCreateRequest, group);
 			groupRepository.save(group);
 			response.setMessage(CarSystemConstants.GROUP_CREATE);
-		} catch (ConstraintViolationException | DataIntegrityViolationException exception) {
+		} catch (NullPointerException | ConstraintViolationException | DataIntegrityViolationException exception) {
 			throw new ResourceNotCreatedException(exception.getMessage());
 		}
 		return response;
@@ -117,10 +120,10 @@ public class GroupServiceImpl implements GroupService {
 
 	public void addGroupDetails(GroupCreateRequest groupCreateRequest, Group group) {
 
-		group.setCreatedDate(currentTime);
-		group.setLastUpdatedDate(currentTime);
+		group.setCreatedDate(new Date());
+		group.setLastUpdatedDate(new Date());
 
-		if (Objects.nonNull(groupCreateRequest.getGroupName())) {
+		if ((!groupCreateRequest.getGroupName().isEmpty()) && (!groupCreateRequest.getGroupName().equals(" "))) {
 			group.setGroupName(groupCreateRequest.getGroupName());
 		}
 
