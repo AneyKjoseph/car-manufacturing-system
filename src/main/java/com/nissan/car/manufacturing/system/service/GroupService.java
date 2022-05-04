@@ -14,9 +14,9 @@ public interface GroupService {
 
 	public CommonResponse editGroup(GroupCreateRequest groupUpdateRequest, String id);
 
-	public CommonResponse deactivateGroup(Group group);
+	public CommonResponse deactivateGroup(Long id);
 
-	public CommonResponse activateGroup(Group group);
+	public CommonResponse activateGroup(Long id);
 
 	public Optional<Group> findbyGroupCode(Long id);
 
