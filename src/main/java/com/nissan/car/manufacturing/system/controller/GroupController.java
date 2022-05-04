@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nissan.car.manufacturing.system.model.Group;
-import com.nissan.car.manufacturing.system.model.Plant;
+import com.nissan.car.manufacturing.system.entity.Group;
+import com.nissan.car.manufacturing.system.entity.Plant;
 import com.nissan.car.manufacturing.system.request.GroupCreateRequest;
-import com.nissan.car.manufacturing.system.response.Response;
+import com.nissan.car.manufacturing.system.response.CommonResponse;
 import com.nissan.car.manufacturing.system.service.GroupService;
 
 @RestController
@@ -30,29 +30,29 @@ public class GroupController {
 	private GroupService groupService;
 
 	@PostMapping("/createGroup")
-	public ResponseEntity<Response> createGroup(@RequestBody GroupCreateRequest groupCreateRequest) {
-		Response response = groupService.createGroup(groupCreateRequest);
+	public ResponseEntity<CommonResponse> createGroup(@RequestBody GroupCreateRequest groupCreateRequest) {
+		CommonResponse response = groupService.createGroup(groupCreateRequest);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PutMapping("/editGroup/{id}")
-	public ResponseEntity<Response> editGroup(@RequestBody GroupCreateRequest groupUpdateRequest,
+	public ResponseEntity<CommonResponse> editGroup(@RequestBody GroupCreateRequest groupUpdateRequest,
 			@PathVariable String id) {
-		Response response = groupService.editGroup(groupUpdateRequest, id);
+		CommonResponse response = groupService.editGroup(groupUpdateRequest, id);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PutMapping("/deactivateGroup/{id}")
-	public ResponseEntity<Response> deactivateGroup(@PathVariable Long id) {
+	public ResponseEntity<CommonResponse> deactivateGroup(@PathVariable Long id) {
 		Optional<Group> newGroup = groupService.findbyGroupCode(id);
-		Response response = groupService.deactivateGroup(newGroup.get());
+		CommonResponse response = groupService.deactivateGroup(newGroup.get());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PutMapping("/activateGroup/{id}")
-	public ResponseEntity<Response> activateGroup(@PathVariable Long id) {
+	public ResponseEntity<CommonResponse> activateGroup(@PathVariable Long id) {
 		Optional<Group> newGroup = groupService.findbyGroupCode(id);
-		Response response = groupService.activateGroup(newGroup.get());
+		CommonResponse response = groupService.activateGroup(newGroup.get());
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

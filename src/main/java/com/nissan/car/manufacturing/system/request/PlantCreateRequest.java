@@ -2,8 +2,8 @@ package com.nissan.car.manufacturing.system.request;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * 
  * @author Aney K Joseph
@@ -24,15 +24,15 @@ public class PlantCreateRequest {
 
 	@JsonProperty("language")
 	private String language;
-	
-	@JsonProperty("active_flag")
-	private boolean activeFlag;
 
-	public boolean isActiveFlag() {
+	@JsonProperty("active_flag")
+	private Boolean activeFlag;
+
+	public Boolean getActiveFlag() {
 		return activeFlag;
 	}
 
-	public void setActiveFlag(boolean activeFlag) {
+	public void setActiveFlag(Boolean activeFlag) {
 		this.activeFlag = activeFlag;
 	}
 
@@ -79,7 +79,5 @@ public class PlantCreateRequest {
 	public PlantCreateRequest() {
 		super();
 	}
-	
-	
 
 }

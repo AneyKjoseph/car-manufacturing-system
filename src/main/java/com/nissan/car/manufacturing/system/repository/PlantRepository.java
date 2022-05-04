@@ -6,7 +6,7 @@ package com.nissan.car.manufacturing.system.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.nissan.car.manufacturing.system.model.Plant;
+import com.nissan.car.manufacturing.system.entity.Plant;
 
 /**
  * @author S Sarathkrishna

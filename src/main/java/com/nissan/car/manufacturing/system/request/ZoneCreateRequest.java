@@ -12,25 +12,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Component
 public class ZoneCreateRequest {
-	
+
 	@JsonProperty("zone_name")
 	private String zoneName;
-	
+
 	@JsonProperty("plant_code")
 	private Long plantCode;
-	
+
 	@JsonProperty("group_code")
 	private Long groupCode;
-	
+
 	@JsonProperty("active_flag")
-	private boolean activeFlag;
+	private Boolean activeFlag;
 
-
-	public boolean isActiveFlag() {
+	public Boolean getActiveFlag() {
 		return activeFlag;
 	}
 
-	public void setActiveFlag(boolean activeFlag) {
+	public void setActiveFlag(Boolean activeFlag) {
 		this.activeFlag = activeFlag;
 	}
 
@@ -74,6 +73,5 @@ public class ZoneCreateRequest {
 		this.groupCode = groupCode;
 		this.activeFlag = activeFlag;
 	}
-	
-	
+
 }

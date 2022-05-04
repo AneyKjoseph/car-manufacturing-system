@@ -1,4 +1,4 @@
-package com.nissan.car.manufacturing.system.model;
+package com.nissan.car.manufacturing.system.entity;
 
 import java.util.ArrayList;
 import java.util.Date;

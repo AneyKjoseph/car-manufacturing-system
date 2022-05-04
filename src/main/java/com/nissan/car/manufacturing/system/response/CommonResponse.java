@@ -13,11 +13,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Component
 @JsonInclude(JsonInclude.Include. NON_NULL)
-public class Response {
+public class CommonResponse {
 	@JsonProperty("message")
 	private String message;
 
-	public Response(String message) {
+	public CommonResponse(String message) {
 		super();
 		this.message = message;
 	}
@@ -30,7 +30,7 @@ public class Response {
 		this.message = message;
 	}
 
-	public Response() {
+	public CommonResponse() {
 		super();
 	}
 	
