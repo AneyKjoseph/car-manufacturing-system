@@ -1,25 +1,27 @@
-/**
- * 
- */
 package com.nissan.car.manufacturing.system.serviceImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.nissan.car.manufacturing.system.model.Zone;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.nissan.car.manufacturing.system.entity.Group;
+import com.nissan.car.manufacturing.system.entity.Plant;
+import com.nissan.car.manufacturing.system.entity.Zone;
 import com.nissan.car.manufacturing.system.error.exceptions.InvalidActiveStatusException;
 import com.nissan.car.manufacturing.system.error.exceptions.ResourceNotCreatedException;
 import com.nissan.car.manufacturing.system.error.exceptions.ResourceNotFoundException;
-import com.nissan.car.manufacturing.system.model.Plant;
 import com.nissan.car.manufacturing.system.repository.PlantRepository;
 import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
-import com.nissan.car.manufacturing.system.response.Response;
+import com.nissan.car.manufacturing.system.response.CommonResponse;
+import com.nissan.car.manufacturing.system.response.GroupResponse;
+import com.nissan.car.manufacturing.system.response.PlantDetailsResponse;
+import com.nissan.car.manufacturing.system.response.ZoneResponse;
 import com.nissan.car.manufacturing.system.service.PlantService;
+import com.nissan.car.manufacturing.system.utils.CarSystemConstants;
 
 /**
  * @author S Sarathkrishna
@@ -27,22 +29,15 @@ import com.nissan.car.manufacturing.system.service.PlantService;
  */
 @Service
 public class PlantServiceImpl implements PlantService {
-	private static final String PLANT_CREATE_SUCCESS = "New plant created successfully";
-	private static final String PLANT_ACTIVE_STATUS = "Plant already in active status";
-	private static final String PLANT_ACTIVATED_SUCCESS = "Plant activated successfully";
-	private static final String PLANT_DEACTIVATED_SUCCESS = "Plant deactivated successfully";
-	private static final String PLANT_DEACTIVE_STATUS = "Plant already in deactived status";
-	private static final String PLANT_NOT_FOUND = "Requested Plant not found";
-	private static final String PLANT_UPDATE_SUCCESS = "Requested Plant updated successfully";
 
 	@Autowired
 	PlantRepository plantRepository;
 
 	@Override
-	public Response createPlant(PlantCreateRequest createRequest) {
+	public CommonResponse createPlant(PlantCreateRequest createRequest) {
 
 		Plant plantEntity = new Plant();
-		Response response = new Response();
+		CommonResponse response = new CommonResponse();
 		mapRequestToPlantEntity(createRequest, plantEntity);
 		try {
 			Date currentTime = new Date();
@@ -50,7 +45,7 @@ public class PlantServiceImpl implements PlantService {
 			plantEntity.setLastUpdatedDate(currentTime);
 			Plant created = plantRepository.save(plantEntity);
 			if (Objects.nonNull(created.getPlantCode())) {
-				response.setMessage(PLANT_CREATE_SUCCESS);
+				response.setMessage(CarSystemConstants.PLANT_CREATE_SUCCESS);
 			}
 
 		} catch (ConstraintViolationException | DataIntegrityViolationException exception) {
@@ -77,60 +72,60 @@ public class PlantServiceImpl implements PlantService {
 			plantEntity.setLanguage(request.getLanguage());
 
 		}
-		if (Objects.nonNull(request.isActiveFlag())) {
-			plantEntity.setActiveFlag(request.isActiveFlag());
+		if (Objects.nonNull(request.getActiveFlag())) {
+			plantEntity.setActiveFlag(request.getActiveFlag());
 
 		}
 
 	}
 
 	@Override
-	public Response activatePlant(String id) {
-		Response response = new Response();
+	public CommonResponse activatePlant(String id) {
+		CommonResponse response = new CommonResponse();
 
 		Optional<Plant> plantOptional = plantRepository.findById(Long.parseLong(id));
 		if (plantOptional.isPresent()) {
 			Plant plantEntity = plantOptional.get();
 			if (plantEntity.getActiveFlag()) {
-				throw new InvalidActiveStatusException(PLANT_ACTIVE_STATUS);
+				throw new InvalidActiveStatusException(CarSystemConstants.PLANT_ACTIVE_STATUS);
 			} else {
 				plantEntity.setActiveFlag(true);
 				plantEntity.setLastUpdatedDate(new Date());
 				plantRepository.save(plantEntity);
-				response.setMessage(PLANT_ACTIVATED_SUCCESS);
+				response.setMessage(CarSystemConstants.PLANT_ACTIVATED_SUCCESS);
 			}
 		} else {
-			throw new ResourceNotFoundException(PLANT_NOT_FOUND);
+			throw new ResourceNotFoundException(CarSystemConstants.PLANT_NOT_FOUND);
 		}
 
 		return response;
 	}
 
 	@Override
-	public Response deactivatePlant(String id) {
-		Response response = new Response();
+	public CommonResponse deactivatePlant(String id) {
+		CommonResponse response = new CommonResponse();
 
 		Optional<Plant> plantOptional = plantRepository.findById(Long.parseLong(id));
 		if (plantOptional.isPresent()) {
 			Plant plantEntity = plantOptional.get();
-			if (Objects.nonNull(plantEntity.getActiveFlag()) && !plantEntity.getActiveFlag()) {
-				throw new InvalidActiveStatusException(PLANT_DEACTIVE_STATUS);
+			if (!plantEntity.getActiveFlag()) {
+				throw new InvalidActiveStatusException(CarSystemConstants.PLANT_DEACTIVE_STATUS);
 			} else {
 				plantEntity.setActiveFlag(false);
 				plantEntity.setLastUpdatedDate(new Date());
 				plantRepository.save(plantEntity);
-				response.setMessage(PLANT_DEACTIVATED_SUCCESS);
+				response.setMessage(CarSystemConstants.PLANT_DEACTIVATED_SUCCESS);
 			}
 		} else {
-			throw new ResourceNotFoundException(PLANT_NOT_FOUND);
+			throw new ResourceNotFoundException(CarSystemConstants.PLANT_NOT_FOUND);
 		}
 
 		return response;
 	}
 
 	@Override
-	public Response updatePlant(PlantCreateRequest updateRequest, String id) {
-		Response response = new Response();
+	public CommonResponse updatePlant(PlantCreateRequest updateRequest, String id) {
+		CommonResponse response = new CommonResponse();
 
 		Optional<Plant> plantOptional = plantRepository.findById(Long.parseLong(id));
 		if (plantOptional.isPresent()) {
@@ -139,23 +134,65 @@ public class PlantServiceImpl implements PlantService {
 
 			plantEntity.setLastUpdatedDate(new Date());
 			plantRepository.save(plantEntity);
-			response.setMessage(PLANT_UPDATE_SUCCESS);
+			response.setMessage(CarSystemConstants.PLANT_UPDATE_SUCCESS);
 
 		} else {
-			throw new ResourceNotFoundException(PLANT_NOT_FOUND);
+			throw new ResourceNotFoundException(CarSystemConstants.PLANT_NOT_FOUND);
 		}
 
 		return response;
 	}
 
 	@Override
-	public Plant getPlantDetails(String id) {
+	public PlantDetailsResponse getPlantDetails(String id) {
+		PlantDetailsResponse response = new PlantDetailsResponse();
 		Optional<Plant> plantEntity = plantRepository.findById(Long.parseLong(id));
 		if (plantEntity.isPresent()) {
-			return plantEntity.get();
+			mapEntityToResponse(response,plantEntity.get());
+			return response;
 		} else {
-			throw new ResourceNotFoundException(PLANT_NOT_FOUND);
+			throw new ResourceNotFoundException(CarSystemConstants.PLANT_NOT_FOUND);
 		}
+	}
+
+	private void mapEntityToResponse(PlantDetailsResponse response, Plant plant) {
+		response.setPlantCode(plant.getPlantCode());
+		response.setPlantName(plant.getPlantName());
+		response.setPlace(plant.getPlace());
+		response.setCountry(plant.getCountry());
+		response.setLanguage(plant.getLanguage());
+		response.setActiveFlag(plant.getActiveFlag());
+		response.setCreatedDate(plant.getCreatedDate());
+		response.setLastUpdatedDate(plant.getLastUpdatedDate());
+		response.setGroups(plant.getGroups().stream()
+				.map(groupEntity -> mapGroupEntityResponse(groupEntity))
+				.collect(Collectors.toList()));
+		
+	}
+
+	private GroupResponse mapGroupEntityResponse(Group group) {
+		GroupResponse groupResponse = new GroupResponse();
+		groupResponse.setGroupName(group.getGroupName());
+		groupResponse.setGroupCode(group.getGroupCode());
+		groupResponse.setActiveFlag(group.getActiveFlag());
+		groupResponse.setCreatedDate(group.getCreatedDate());
+		groupResponse.setLastUpdatedDate(group.getLastUpdatedDate());
+		groupResponse.setZones(group.getZones().stream()
+				.map(zone -> mapZoneEntityResponse(zone))
+				.collect(Collectors.toList()));
+		return groupResponse;
+	}
+	
+	
+
+	private ZoneResponse mapZoneEntityResponse(Zone zone) {
+		ZoneResponse zoneResponse = new ZoneResponse();
+		zoneResponse.setZoneCode(zone.getZoneCode());
+		zoneResponse.setZoneName(zone.getZoneName());
+		zoneResponse.setActiveFlag(zone.getActiveFlag());
+		zoneResponse.setCreatedDate(zone.getCreatedDate());
+		zoneResponse.setLastUpdatedDate(zone.getLastUpdatedDate());
+		return zoneResponse;
 	}
 
 	@Override

@@ -10,15 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.nissan.car.manufacturing.system.entity.Group;
+import com.nissan.car.manufacturing.system.entity.Plant;
 import com.nissan.car.manufacturing.system.error.exceptions.InvalidActiveStatusException;
 import com.nissan.car.manufacturing.system.error.exceptions.ResourceNotCreatedException;
 import com.nissan.car.manufacturing.system.error.exceptions.ResourceNotFoundException;
-import com.nissan.car.manufacturing.system.model.Group;
-import com.nissan.car.manufacturing.system.model.Plant;
 import com.nissan.car.manufacturing.system.repository.GroupRepository;
 import com.nissan.car.manufacturing.system.repository.PlantRepository;
 import com.nissan.car.manufacturing.system.request.GroupCreateRequest;
-import com.nissan.car.manufacturing.system.response.Response;
+import com.nissan.car.manufacturing.system.response.CommonResponse;
 import com.nissan.car.manufacturing.system.service.GroupService;
 import com.nissan.car.manufacturing.system.utils.CarSystemConstants;
 
@@ -34,8 +34,8 @@ public class GroupServiceImpl implements GroupService {
 	Date currentTime = new Date();
 
 	@Override
-	public Response editGroup(GroupCreateRequest groupUpdateRequest, String id) {
-		Response response = new Response();
+	public CommonResponse editGroup(GroupCreateRequest groupUpdateRequest, String id) {
+		CommonResponse response = new CommonResponse();
 		Optional<Group> newGroup = findbyGroupCode(Long.parseLong(id));
 		Group group = newGroup.get();
 		try {
@@ -54,8 +54,8 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public Response deactivateGroup(Group group) {
-		Response response = new Response();
+	public CommonResponse deactivateGroup(Group group) {
+		CommonResponse response = new CommonResponse();
 		if (Objects.nonNull(group.getActiveFlag()) && (group.getActiveFlag())) {
 			group.setActiveFlag(false);
 			group.setLastUpdatedDate(currentTime);
@@ -68,8 +68,8 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public Response activateGroup(Group group) {
-		Response response = new Response();
+	public CommonResponse activateGroup(Group group) {
+		CommonResponse response = new CommonResponse();
 		if (group.getActiveFlag()) {
 			throw new InvalidActiveStatusException(CarSystemConstants.GROUP_ACTIVE_STATUS);
 		} else {
@@ -102,9 +102,9 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public Response createGroup(GroupCreateRequest groupCreateRequest) {
+	public CommonResponse createGroup(GroupCreateRequest groupCreateRequest) {
 		Group group = new Group();
-		Response response = new Response();
+		CommonResponse response = new CommonResponse();
 		try {
 			addGroupDetails(groupCreateRequest, group);
 			groupRepository.save(group);

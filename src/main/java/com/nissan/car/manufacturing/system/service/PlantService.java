@@ -3,27 +3,27 @@
  */
 package com.nissan.car.manufacturing.system.service;
 
-import com.nissan.car.manufacturing.system.model.Plant;
-import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
-import com.nissan.car.manufacturing.system.response.Response;
-
 import java.util.List;
 import java.util.Map;
+
+import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
+import com.nissan.car.manufacturing.system.response.CommonResponse;
+import com.nissan.car.manufacturing.system.response.PlantDetailsResponse;
 
 /**
  * @author S Sarathkrishna
  *
  */
 public interface PlantService {
-	Response createPlant(PlantCreateRequest createRequest);
+	CommonResponse createPlant(PlantCreateRequest createRequest);
 
-	Response activatePlant(String id);
+	CommonResponse activatePlant(String id);
 	
-	Response deactivatePlant(String id);
+	CommonResponse deactivatePlant(String id);
 
-	Response updatePlant(PlantCreateRequest updateRequest, String id);
+	CommonResponse updatePlant(PlantCreateRequest updateRequest, String id);
 
-	Plant getPlantDetails(String id);
+	PlantDetailsResponse getPlantDetails(String id);
 
 	Map<Long, Map<Long, List<Long>>> getAll();
 }

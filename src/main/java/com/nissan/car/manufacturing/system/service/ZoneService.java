@@ -1,7 +1,7 @@
 package com.nissan.car.manufacturing.system.service;
 
 import com.nissan.car.manufacturing.system.request.ZoneCreateRequest;
-import com.nissan.car.manufacturing.system.response.Response;
+import com.nissan.car.manufacturing.system.response.CommonResponse;
 
 /**
  * 
@@ -11,12 +11,12 @@ import com.nissan.car.manufacturing.system.response.Response;
 
 public interface ZoneService {
 
-	Response createZone(ZoneCreateRequest createRequest);
+	CommonResponse createZone(ZoneCreateRequest createRequest);
 
-	Response activateZone(String id);
+	CommonResponse activateZone(String id);
 
-	Response deactivateZone(String id);
+	CommonResponse deactivateZone(String id);
 
-	Response updateZone(ZoneCreateRequest updateRequest, String id);
+	CommonResponse updateZone(ZoneCreateRequest updateRequest, String id);
 
 }

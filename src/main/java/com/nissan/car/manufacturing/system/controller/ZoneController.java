@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
 import com.nissan.car.manufacturing.system.request.ZoneCreateRequest;
-import com.nissan.car.manufacturing.system.response.Response;
+import com.nissan.car.manufacturing.system.response.CommonResponse;
 import com.nissan.car.manufacturing.system.service.ZoneService;
 
 /**
@@ -28,24 +27,25 @@ public class ZoneController {
 	@Autowired
 	ZoneService zoneService;
 
-	@PostMapping(value = "/zones")
-	public ResponseEntity<Response> createZone(@RequestBody ZoneCreateRequest createRequest) {
+	@PostMapping(value = "/zone")
+	public ResponseEntity<CommonResponse> createZone(@RequestBody ZoneCreateRequest createRequest) {
 		return new ResponseEntity(zoneService.createZone(createRequest), HttpStatus.CREATED);
 	}
-	
-	@PutMapping(value = "/zones/activate/{id}")
-    public ResponseEntity<Response> activateZone(@PathVariable String id) {
-        return ResponseEntity.ok(zoneService.activateZone(id));
-    }
-	
-	@PutMapping(value = "/zones/deactivate/{id}")
-    public ResponseEntity<Response> deactivateZone(@PathVariable String id) {
-        return ResponseEntity.ok(zoneService.deactivateZone(id));
-    }
-	
-	@PutMapping(value = "/zones/{id}")
-    public ResponseEntity<Response> updatePlant(@RequestBody ZoneCreateRequest updateRequest, @PathVariable String id) {
-        return ResponseEntity.ok(zoneService.updateZone(updateRequest, id));
-    }
+
+	@PutMapping(value = "/zone/activate/{id}")
+	public ResponseEntity<CommonResponse> activateZone(@PathVariable String id) {
+		return ResponseEntity.ok(zoneService.activateZone(id));
+	}
+
+	@PutMapping(value = "/zone/deactivate/{id}")
+	public ResponseEntity<CommonResponse> deactivateZone(@PathVariable String id) {
+		return ResponseEntity.ok(zoneService.deactivateZone(id));
+	}
+
+	@PutMapping(value = "/zone/{id}")
+	public ResponseEntity<CommonResponse> updatePlant(@RequestBody ZoneCreateRequest updateRequest,
+			@PathVariable String id) {
+		return ResponseEntity.ok(zoneService.updateZone(updateRequest, id));
+	}
 
 }
