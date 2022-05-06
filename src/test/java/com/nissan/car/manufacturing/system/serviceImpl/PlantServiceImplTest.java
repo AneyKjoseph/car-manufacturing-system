@@ -1,6 +1,7 @@
 package com.nissan.car.manufacturing.system.serviceImpl;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("New plant created successfully", response.getMessage());
 
 	}
-	
+
 	@Test
 	public void testCreatePlantEmptyRequest() {
 		PlantCreateRequest request = new PlantCreateRequest();
@@ -60,7 +61,7 @@ public class PlantServiceImplTest {
 		assertThatThrownBy(() -> service.createPlant(request)).isInstanceOf(ResourceNotCreatedException.class);
 
 	}
-	
+
 	@Test
 	public void testCreatePlantNotCreated() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -71,7 +72,7 @@ public class PlantServiceImplTest {
 		Assertions.assertNotNull(response);
 		Assertions.assertNull(response.getMessage());
 	}
-	
+
 	@Test
 	public void testActivatePlant() {
 		Plant plantEntity = new Plant();
@@ -84,6 +85,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("Plant activated successfully", response.getMessage());
 
 	}
+
 	@Test
 	public void testActivatePlantNotFound() {
 		Plant plantEntity = new Plant();
@@ -93,6 +95,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.activatePlant("1")).isInstanceOf(ResourceNotFoundException.class);
 	}
+
 	@Test
 	public void testActivatePlantInvalidStatus() {
 		Plant plantEntity = new Plant();
@@ -102,7 +105,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.activatePlant("1")).isInstanceOf(InvalidActiveStatusException.class);
 	}
-	
+
 	@Test
 	public void testDeActivatePlant() {
 		Plant plantEntity = new Plant();
@@ -115,6 +118,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("Plant deactivated successfully", response.getMessage());
 
 	}
+
 	@Test
 	public void testDeActivatePlantNotFound() {
 		Plant plantEntity = new Plant();
@@ -124,6 +128,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.deactivatePlant("1")).isInstanceOf(ResourceNotFoundException.class);
 	}
+
 	@Test
 	public void testDeActivatePlantInvalidStatus() {
 		Plant plantEntity = new Plant();
@@ -133,7 +138,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.deactivatePlant("1")).isInstanceOf(InvalidActiveStatusException.class);
 	}
-	
+
 	@Test
 	public void testUpdatePlant() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -147,6 +152,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("Requested Plant updated successfully", response.getMessage());
 
 	}
+
 	@Test
 	public void testUpdatePlantNotFound() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -158,7 +164,7 @@ public class PlantServiceImplTest {
 		assertThatThrownBy(() -> service.updatePlant(request, "1")).isInstanceOf(ResourceNotFoundException.class);
 
 	}
-	
+
 	@Test
 	public void testGetPlantDetails() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -179,7 +185,7 @@ public class PlantServiceImplTest {
 		Assertions.assertNotNull(plantResponse);
 
 	}
-	
+
 	@Test
 	public void testGetPlantNotFound() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -189,6 +195,43 @@ public class PlantServiceImplTest {
 		Mockito.when(repository.findById(plantEntity.getPlantCode())).thenReturn(Optional.empty());
 
 		assertThatThrownBy(() -> service.getPlantDetails("1")).isInstanceOf(ResourceNotFoundException.class);
+
+	}
+
+	@Test
+	public void getAllDetails() {
+
+		List<Plant> plants = new ArrayList<Plant>();
+		Plant plantEntity = new Plant();
+		Group group = new Group();
+		Zone zone = new Zone();
+		List<Zone> zoneList = new ArrayList<Zone>();
+		zoneList.add(zone);
+		group.setZones(zoneList);
+		List<Group> groupList = new ArrayList<Group>();
+		groupList.add(group);
+		plantEntity.setGroups(groupList);
+		plantEntity.setPlantCode(Long.parseLong("1"));
+		Plant plantEntity2 = new Plant();
+		plantEntity2.setGroups(groupList);
+		plantEntity2.setPlantCode(Long.parseLong("1"));
+		plants.add(plantEntity);
+		plants.add(plantEntity2);
+
+		Mockito.when(repository.findAll()).thenReturn(plants);
+
+		assertEquals(plants, service.getAllDetails());
+
+	}
+
+	@Test
+	public void getAllDetailsPlantNotFound() {
+
+		List<Plant> plants = new ArrayList<Plant>();
+
+		Mockito.when(repository.findAll()).thenReturn(plants);
+
+		assertThatThrownBy(() -> service.getAllDetails()).isInstanceOf(ResourceNotFoundException.class);
 
 	}
 

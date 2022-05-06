@@ -209,5 +209,15 @@ public class PlantServiceImpl implements PlantService {
 				});
 		return  plants;
 	}
+	
+	@Override
+	public List<Plant> getAllDetails() {
+		List<Plant> plants = plantRepository.findAll();
+		if (plants.isEmpty()) {
+			throw new ResourceNotFoundException(CarSystemConstants.EMPTY_RECORDS);
+		} else {
+			return plants;
+		}
+	}
 
 }

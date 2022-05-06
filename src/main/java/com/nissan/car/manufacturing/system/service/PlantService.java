@@ -6,6 +6,7 @@ package com.nissan.car.manufacturing.system.service;
 import java.util.List;
 import java.util.Map;
 
+import com.nissan.car.manufacturing.system.entity.Plant;
 import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
 import com.nissan.car.manufacturing.system.response.CommonResponse;
 import com.nissan.car.manufacturing.system.response.PlantDetailsResponse;
@@ -26,4 +27,6 @@ public interface PlantService {
 	PlantDetailsResponse getPlantDetails(String id);
 
 	Map<Long, Map<Long, List<Long>>> getAll();
+	
+	public List<Plant> getAllDetails();
 }
