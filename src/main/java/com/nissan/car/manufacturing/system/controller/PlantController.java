@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nissan.car.manufacturing.system.entity.Plant;
 import com.nissan.car.manufacturing.system.request.PlantCreateRequest;
 import com.nissan.car.manufacturing.system.response.CommonResponse;
 import com.nissan.car.manufacturing.system.response.PlantDetailsResponse;
 import com.nissan.car.manufacturing.system.service.PlantService;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author S Sarathkrishna
@@ -59,5 +62,11 @@ public class PlantController {
 	@GetMapping(value = "/get/all")
 	public ResponseEntity<Map<Long, Map<Long, List<Long>>>> getAll() {
 		return ResponseEntity.ok(plantService.getAll());
+	}
+
+	@GetMapping("/getAll")
+	@ApiOperation("For getting all details")
+	public ResponseEntity<List<Plant>> getAllDetails() {
+		return new ResponseEntity<>(plantService.getAllDetails(), HttpStatus.OK);
 	}
 }

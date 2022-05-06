@@ -20,5 +20,4 @@ public interface GroupService {
 
 	public Optional<Group> findbyGroupCode(Long id);
 
-	public List<Plant> getAllDetails();
 }

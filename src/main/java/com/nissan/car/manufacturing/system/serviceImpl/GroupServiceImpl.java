@@ -1,7 +1,6 @@
 package com.nissan.car.manufacturing.system.serviceImpl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,7 +15,6 @@ import com.nissan.car.manufacturing.system.error.exceptions.InvalidActiveStatusE
 import com.nissan.car.manufacturing.system.error.exceptions.ResourceNotCreatedException;
 import com.nissan.car.manufacturing.system.error.exceptions.ResourceNotFoundException;
 import com.nissan.car.manufacturing.system.repository.GroupRepository;
-import com.nissan.car.manufacturing.system.repository.PlantRepository;
 import com.nissan.car.manufacturing.system.request.GroupCreateRequest;
 import com.nissan.car.manufacturing.system.response.CommonResponse;
 import com.nissan.car.manufacturing.system.service.GroupService;
@@ -27,9 +25,6 @@ public class GroupServiceImpl implements GroupService {
 
 	@Autowired
 	private GroupRepository groupRepository;
-
-	@Autowired
-	private PlantRepository plantRepository;
 
 	@Override
 	public CommonResponse editGroup(GroupCreateRequest groupUpdateRequest, String id) {
@@ -91,16 +86,6 @@ public class GroupServiceImpl implements GroupService {
 			return newGroup;
 		} else {
 			throw new ResourceNotFoundException(CarSystemConstants.GROUP_NOT_FOUND);
-		}
-	}
-
-	@Override
-	public List<Plant> getAllDetails() {
-		List<Plant> plants = plantRepository.findAll();
-		if (plants.isEmpty()) {
-			throw new ResourceNotFoundException(CarSystemConstants.EMPTY_RECORDS);
-		} else {
-			return plants;
 		}
 	}
 
