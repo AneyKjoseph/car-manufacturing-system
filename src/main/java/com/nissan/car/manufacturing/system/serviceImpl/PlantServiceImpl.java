@@ -207,7 +207,13 @@ public class PlantServiceImpl implements PlantService {
 					});
 					plants.put(plant.getPlantCode(),map);
 				});
-		return  plants;
+
+		//Optimized
+		List<Plant> list = plantRepository.findAll();
+		Map<Long, Map<Long, List<Long>>> collect = list.stream().collect(Collectors.toMap(Plant::getPlantCode,
+				plant -> plant.getGroups().stream().collect(Collectors.toMap(Group::getGroupCode,
+						group -> group.getZones().stream().map(Zone::getZoneCode).collect(Collectors.toList())))));
+		return collect;
 	}
 
 }

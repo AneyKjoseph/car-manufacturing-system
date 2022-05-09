@@ -3,7 +3,9 @@ package com.nissan.car.manufacturing.system.serviceImpl;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -49,7 +51,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("New plant created successfully", response.getMessage());
 
 	}
-	
+
 	@Test
 	public void testCreatePlantEmptyRequest() {
 		PlantCreateRequest request = new PlantCreateRequest();
@@ -60,7 +62,7 @@ public class PlantServiceImplTest {
 		assertThatThrownBy(() -> service.createPlant(request)).isInstanceOf(ResourceNotCreatedException.class);
 
 	}
-	
+
 	@Test
 	public void testCreatePlantNotCreated() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -71,7 +73,7 @@ public class PlantServiceImplTest {
 		Assertions.assertNotNull(response);
 		Assertions.assertNull(response.getMessage());
 	}
-	
+
 	@Test
 	public void testActivatePlant() {
 		Plant plantEntity = new Plant();
@@ -84,6 +86,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("Plant activated successfully", response.getMessage());
 
 	}
+
 	@Test
 	public void testActivatePlantNotFound() {
 		Plant plantEntity = new Plant();
@@ -93,6 +96,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.activatePlant("1")).isInstanceOf(ResourceNotFoundException.class);
 	}
+
 	@Test
 	public void testActivatePlantInvalidStatus() {
 		Plant plantEntity = new Plant();
@@ -102,7 +106,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.activatePlant("1")).isInstanceOf(InvalidActiveStatusException.class);
 	}
-	
+
 	@Test
 	public void testDeActivatePlant() {
 		Plant plantEntity = new Plant();
@@ -115,6 +119,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("Plant deactivated successfully", response.getMessage());
 
 	}
+
 	@Test
 	public void testDeActivatePlantNotFound() {
 		Plant plantEntity = new Plant();
@@ -124,6 +129,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.deactivatePlant("1")).isInstanceOf(ResourceNotFoundException.class);
 	}
+
 	@Test
 	public void testDeActivatePlantInvalidStatus() {
 		Plant plantEntity = new Plant();
@@ -133,7 +139,7 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.deactivatePlant("1")).isInstanceOf(InvalidActiveStatusException.class);
 	}
-	
+
 	@Test
 	public void testUpdatePlant() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -147,6 +153,7 @@ public class PlantServiceImplTest {
 		Assertions.assertEquals("Requested Plant updated successfully", response.getMessage());
 
 	}
+
 	@Test
 	public void testUpdatePlantNotFound() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -158,7 +165,7 @@ public class PlantServiceImplTest {
 		assertThatThrownBy(() -> service.updatePlant(request, "1")).isInstanceOf(ResourceNotFoundException.class);
 
 	}
-	
+
 	@Test
 	public void testGetPlantDetails() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -179,7 +186,7 @@ public class PlantServiceImplTest {
 		Assertions.assertNotNull(plantResponse);
 
 	}
-	
+
 	@Test
 	public void testGetPlantNotFound() {
 		PlantCreateRequest request = buildCreateRequest();
@@ -190,6 +197,67 @@ public class PlantServiceImplTest {
 
 		assertThatThrownBy(() -> service.getPlantDetails("1")).isInstanceOf(ResourceNotFoundException.class);
 
+	}
+
+	@Test
+	public void testGetAllNotFound() {
+		Map<Long, Map<Long, List<Long>>> maps = new HashMap<>();
+
+		List<Plant> plants = new ArrayList<>();
+
+		Mockito.when(repository.findAll()).thenReturn(plants);
+		Map<Long, Map<Long, List<Long>>> all = service.getAll();
+		Assertions.assertEquals(maps, all);
+	}
+
+	@Test
+	public void testGetAll() {
+		Map<Long, Map<Long, List<Long>>> maps = new HashMap<>();
+		List<Long> list = new ArrayList<Long>();
+		Map<Long, List<Long>> map = new HashMap<>();
+		List<Plant> plants = new ArrayList<>();
+		Plant plant = createPlant();
+		plants.add(plant);
+
+		list.add(plant.getGroups().get(0).getZones().get(0).getZoneCode());
+		map.put(plant.getGroups().get(0).getGroupCode(), list);
+		maps.put(plant.getPlantCode(), map);
+
+		Mockito.when(repository.findAll()).thenReturn(plants);
+		Map<Long, Map<Long, List<Long>>> all = service.getAll();
+		Assertions.assertEquals(maps, all);
+	}
+
+	private Plant createPlant() {
+		Plant plant = new Plant();
+		plant.setPlantCode(1L);
+		plant.setPlantName("TestPlant");
+		List<Group> groups = createGroup(plant);
+		plant.setGroups(groups);
+		return plant;
+	}
+
+	private List<Group> createGroup(Plant plant) {
+		List<Group> groups = new ArrayList<Group>();
+		Group group = new Group();
+		group.setGroupCode(1L);
+		group.setGroupName("TestGroup");
+		group.setPlant(plant);
+		List<Zone> zones = createZone(plant, group);
+		groups.add(group);
+		group.setZones(zones);
+		return groups;
+	}
+
+	private List<Zone> createZone(Plant plant, Group group) {
+		List<Zone> zones = new ArrayList<Zone>();
+		Zone zone = new Zone();
+		zone.setZoneCode(1L);
+		zone.setZoneName("TestZone");
+		zone.setGroup(group);
+		zone.setPlant(plant);
+		zones.add(zone);
+		return zones;
 	}
 
 	private PlantCreateRequest buildCreateRequest() {
