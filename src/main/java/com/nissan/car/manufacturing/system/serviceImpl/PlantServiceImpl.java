@@ -215,5 +215,15 @@ public class PlantServiceImpl implements PlantService {
 						group -> group.getZones().stream().map(Zone::getZoneCode).collect(Collectors.toList())))));
 		return collect;
 	}
+	
+	@Override
+	public List<Plant> getAllDetails() {
+		List<Plant> plants = plantRepository.findAll();
+		if (plants.isEmpty()) {
+			throw new ResourceNotFoundException(CarSystemConstants.EMPTY_RECORDS);
+		} else {
+			return plants;
+		}
+	}
 
 }

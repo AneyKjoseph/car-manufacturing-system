@@ -1,6 +1,7 @@
 package com.nissan.car.manufacturing.system.serviceImpl;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,6 +259,42 @@ public class PlantServiceImplTest {
 		zone.setPlant(plant);
 		zones.add(zone);
 		return zones;
+=======
+	public void getAllDetails() {
+
+		List<Plant> plants = new ArrayList<Plant>();
+		Plant plantEntity = new Plant();
+		Group group = new Group();
+		Zone zone = new Zone();
+		List<Zone> zoneList = new ArrayList<Zone>();
+		zoneList.add(zone);
+		group.setZones(zoneList);
+		List<Group> groupList = new ArrayList<Group>();
+		groupList.add(group);
+		plantEntity.setGroups(groupList);
+		plantEntity.setPlantCode(Long.parseLong("1"));
+		Plant plantEntity2 = new Plant();
+		plantEntity2.setGroups(groupList);
+		plantEntity2.setPlantCode(Long.parseLong("1"));
+		plants.add(plantEntity);
+		plants.add(plantEntity2);
+
+		Mockito.when(repository.findAll()).thenReturn(plants);
+
+		assertEquals(plants, service.getAllDetails());
+
+	}
+
+	@Test
+	public void getAllDetailsPlantNotFound() {
+
+		List<Plant> plants = new ArrayList<Plant>();
+
+		Mockito.when(repository.findAll()).thenReturn(plants);
+
+		assertThatThrownBy(() -> service.getAllDetails()).isInstanceOf(ResourceNotFoundException.class);
+
+
 	}
 
 	private PlantCreateRequest buildCreateRequest() {
